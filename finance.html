@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>支付体系 — 成长方向</title>
+  <meta name="description" content="国内银行卡体系、跨境账户与跨境支付研究笔记：iFast、Wise、Maya、港卡，以及 giffgaff、DITO 手机号等基础设施。">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0c'/%3E%3Cpath d='M16 46V18h6v22h26v6H16z' fill='%23c5a3ff'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0d0c;
+      --panel: #141119;
+      --panel-2: #1a1621;
+      --ink: #f0edf5;
+      --muted: #a49dad;
+      --dim: #827a8b;
+      --line: #2e2838;
+      --line-strong: #473d55;
+      --accent: #c5a3ff;
+      --accent-soft: rgba(197, 163, 255, 0.07);
+      --sans: "Helvetica Neue", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(197, 163, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(197, 163, 255, 0.014) 1px, transparent 1px);
+      background-size: 100% 36px, 36px 100%;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    [id] { scroll-margin-top: 84px; }
+
+    h1, h2, h3, p, dl, dd, figure { margin: 0; }
+
+    h1, h2, h3 { text-wrap: balance; }
+
+    p { text-wrap: pretty; }
+
+    .wrap {
+      width: min(1080px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- 顶栏 ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      min-height: 62px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .path {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.05em;
+    }
+
+    .topnav {
+      display: flex;
+      justify-self: end;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .topnav a { color: var(--dim); text-decoration: none; }
+
+    .topnav a:hover { color: var(--accent); }
+
+    /* ---------- 页头 ---------- */
+
+    .page-hero {
+      padding-top: 58px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .kicker span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 44px;
+      align-items: end;
+      padding: 28px 0 40px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .page-hero h1 em {
+      display: block;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-intro {
+      max-width: 46ch;
+      padding-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-intro strong { color: var(--ink); font-weight: 500; }
+
+    .hero-intro .mono {
+      display: block;
+      margin-top: 20px;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .meta > div {
+      padding: 16px 20px 18px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .meta > div + div { padding-left: 20px; }
+
+    .meta > div:last-child { border-right: 0; }
+
+    .meta dt {
+      margin-bottom: 5px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .meta dd {
+      color: var(--ink);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    /* ---------- 正文布局 ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 248px;
+      gap: 64px;
+      align-items: start;
+      padding: 56px 0 72px;
+    }
+
+    .chapter { margin-bottom: 60px; }
+
+    .chapter:last-child { margin-bottom: 0; }
+
+    .chapter-head {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter-no {
+      padding-top: 3px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+
+    .chapter h2 {
+      font-size: clamp(1.35rem, 2.8vw, 1.72rem);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    .prose {
+      color: #ccc6d4;
+      font-size: 0.91rem;
+    }
+
+    .prose p { margin-bottom: 17px; }
+
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    .prose h3 {
+      margin: 30px 0 12px;
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .prose h3::before {
+      content: "# ";
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 400;
+    }
+
+    .prose ul,
+    .prose ol {
+      margin: 0 0 18px;
+      padding-left: 1.2rem;
+    }
+
+    .prose li { margin-bottom: 6px; }
+
+    .prose li::marker { color: var(--dim); }
+
+    .prose a {
+      color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    .lead-line {
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ---------- 流程 / 数据块 ---------- */
+
+    .code {
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: #0a080d;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .code-head strong {
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #ddd5e8;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      line-height: 1.75;
+      tab-size: 2;
+    }
+
+    code { font-family: var(--mono); }
+
+    p code,
+    li code,
+    td code {
+      padding: 1px 5px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 0.82em;
+    }
+
+    /* ---------- 提示与表格 ---------- */
+
+    .note {
+      margin: 24px 0;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      color: #cec7d7;
+      font-size: 0.84rem;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      margin: 24px 0;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    caption {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td { color: #c9c2d3; }
+
+    td:first-child {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    /* ---------- 侧栏 ---------- */
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+    }
+
+    .side-box {
+      padding: 14px 0 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-title {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(46, 40, 56, 0.75);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .toc a span {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+    }
+
+    .toc a:hover { color: var(--accent); }
+
+    .side-text {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.7;
+    }
+
+    .side-text strong { color: var(--ink); font-weight: 500; }
+
+    .side-status {
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .side-status span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- 翻页 ---------- */
+
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pager a {
+      padding: 24px 0;
+      text-decoration: none;
+    }
+
+    .pager a + a {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .pager span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pager strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .pager a:hover strong { color: var(--accent); }
+
+    /* ---------- 页脚 ---------- */
+
+    .footer { padding: 34px 0 44px; }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+
+    .footer a:hover { color: var(--accent); }
+
+    /* ---------- 响应式 ---------- */
+
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-intro { max-width: 58ch; }
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 44px; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .side-box { padding-bottom: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .topbar-inner { grid-template-columns: 1fr auto; min-height: 56px; gap: 12px; }
+      .path { display: none; }
+      .topnav { gap: 12px; }
+      .page-hero { padding-top: 42px; }
+      .page-hero h1 { font-size: clamp(3rem, 16vw, 4.8rem); }
+      .hero-grid { padding: 24px 0 32px; }
+      .meta { grid-template-columns: 1fr 1fr; }
+      .meta > div { padding: 13px 12px 14px 0; }
+      .meta > div + div { padding-left: 12px; }
+      .meta > div:nth-child(2) { border-right: 0; }
+      .meta > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chapter { margin-bottom: 48px; }
+      .chapter-head { grid-template-columns: 1fr; gap: 5px; }
+      .chapter-no { padding-top: 0; }
+      .prose { font-size: 0.88rem; }
+      pre { font-size: 0.7rem; padding: 14px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .pager { grid-template-columns: 1fr; }
+      .pager a + a { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="back" href="index.html">← 返回主页</a>
+      <span class="path">~/growth/finance</span>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="cs.html">计算机</a>
+        <a href="deepseek.html">大模型</a>
+        <a href="fit.html">健身</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker"><span>04</span> Payment / 研究笔记</div>
+
+        <div class="hero-grid">
+          <h1>钱走过的<em>路径。</em></h1>
+          <div class="hero-intro">
+            <p>
+              支付是我见过最接近真实世界的系统课：一张卡、一个账户、一条清算链路，
+              背后是牌照、合规、汇率和风险。<strong>我在补基础，不是在找捷径。</strong>
+            </p>
+            <span class="mono">Cards / Clearing / Cross-border / KYC / Risk</span>
+          </div>
+        </div>
+
+        <dl class="meta">
+          <div>
+            <dt>关注</dt>
+            <dd>国内卡 / 跨境账户</dd>
+          </div>
+          <div>
+            <dt>使用</dt>
+            <dd>iFast / Maya</dd>
+          </div>
+          <div>
+            <dt>工具</dt>
+            <dd>giffgaff / DITO</dd>
+          </div>
+          <div>
+            <dt>原则</dt>
+            <dd>合规优先，不赌规则</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="wrap layout">
+      <article>
+        <section class="chapter" id="why">
+          <div class="chapter-head">
+            <span class="chapter-no">01</span>
+            <h2>为什么一个物联网学生会研究支付</h2>
+          </div>
+          <div class="prose">
+            <p>
+              看起来支付就是扫码、输密码、等一秒。真正拆开，里面有账户、卡组织、清算机构、
+              商户、风控和结算。每一步都有自己的边界，任何一步失败，钱就停在半路。
+            </p>
+            <p>
+              我学物联网，习惯看数据从设备到网关再到云端；支付则是钱从付款方到收款方。
+              两者都是链路，都有协议、超时、重试、对账和失败状态。
+              区别在于，支付链路的错误会直接变成真金白银。
+            </p>
+            <p class="lead-line">
+              研究支付给我最大的收获，不是多开了几个账户，而是知道“能用”和“可靠”之间差多少。
+            </p>
+            <p>
+              这篇是我的学习笔记，不是开户指南，也不是投资建议。规则会变，费用会变，
+              任何决定都应该回到官方条款和当地法律。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="domestic">
+          <div class="chapter-head">
+            <span class="chapter-no">02</span>
+            <h2>国内银行卡体系：先看账户，再看卡</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我最初以为银行卡就是银行卡。后来才知道，先要区分账户类型，再区分借记卡和信用卡，
+              最后才轮到卡组织和支付通道。每一层限制的东西不一样。
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>Domestic card stack / 我的理解</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">层级</th>
+                    <th scope="col">组成</th>
+                    <th scope="col">我关注什么</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>账户</td>
+                    <td>Ⅰ / Ⅱ / Ⅲ 类户</td>
+                    <td>功能范围、交易限额、开户渠道</td>
+                  </tr>
+                  <tr>
+                    <td>卡</td>
+                    <td>借记卡 / 信用卡</td>
+                    <td>年费、额度、还款、盗刷保障</td>
+                  </tr>
+                  <tr>
+                    <td>卡组织</td>
+                    <td>银联等</td>
+                    <td>受理范围、清算币种、境外可用性</td>
+                  </tr>
+                  <tr>
+                    <td>清算</td>
+                    <td>网联 / 银联清算等</td>
+                    <td>交易转接、对账、差错处理</td>
+                  </tr>
+                  <tr>
+                    <td>支付</td>
+                    <td>银行直连 / 第三方支付</td>
+                    <td>快捷支付、限额、风控触发条件</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Ⅰ 类户是全功能账户，Ⅱ、Ⅲ 类户在功能和限额上受限，更适合小额或特定场景。
+              不同银行执行细节不同，开户前应该看银行公告，而不是只看别人的经验帖。
+            </p>
+            <p>
+              借记卡花的是自己的钱，信用卡花的是银行给的额度。信用卡不是免费的钱：
+              免息期、最低还款、分期手续费、逾期成本都要算。国内移动支付很顺，
+              但顺不代表没有成本，商户费率、提现规则和跨境交易都有自己的价格。
+            </p>
+            <div class="note">
+              <strong>My checklist</strong>
+              先看账户类型和限额，再看费率和到账时间。顺序反了，很容易被“零门槛”吸引，最后发现功能不够用。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="cross-border">
+          <div class="chapter-head">
+            <span class="chapter-no">03</span>
+            <h2>跨境账户：多开不等于更自由</h2>
+          </div>
+          <div class="prose">
+            <p>
+              跨境账户不是“多开几个就好”。每个账户背后是不同地区的牌照、KYC、税务规则和可用性。
+              对我来说，选账户的标准不是数量，而是：<strong>它解决哪个具体问题，代价是什么，坏了怎么办。</strong>
+              跨境资金安排还涉及内地与账户所在地的外汇、税务和反洗钱规则，先把合规确认清楚，再谈便利。
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>Accounts I am studying / 个人研究</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">名称</th>
+                    <th scope="col">我把它当成什么</th>
+                    <th scope="col">重点观察</th>
+                    <th scope="col">边界</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>iFast</td>
+                    <td>多币种账户与跨境资金管理工具</td>
+                    <td>币种、入金路径、费用、可用地区</td>
+                    <td>不是国内银行存款，保障与规则因地区而异</td>
+                  </tr>
+                  <tr>
+                    <td>Wise</td>
+                    <td>多币种账户 + 跨境汇款</td>
+                    <td>汇率、手续费、到账时间、账户详情</td>
+                    <td>不是传统银行，部分地区功能受限</td>
+                  </tr>
+                  <tr>
+                    <td>Maya</td>
+                    <td>菲律宾场景的电子钱包 / 银行服务</td>
+                    <td>PHP 使用场景、KYC、提现与转账限制</td>
+                    <td>地区性强，不适合当全球账户</td>
+                  </tr>
+                  <tr>
+                    <td>港卡</td>
+                    <td>香港银行账户与卡组织入口</td>
+                    <td>开户门槛、账户费、FPS、卡种</td>
+                    <td>合规、税务、最低余额都要考虑</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>iFast：我关注的是“路径”</h3>
+            <p>
+              我把 iFast 当作多币种账户和跨境资金管理的工具来研究，而不是“万能钱包”。
+              真正要记录的是：从哪入金、换什么币种、手续费多少、多久到账、
+              如果审核或限制发生，资金怎么取回。
+            </p>
+
+            <h3>Wise：汇率透明不等于零成本</h3>
+            <p>
+              Wise 常被提到的是接近中间价的汇率和相对清楚的手续费。但最终成本要看
+              <strong>总到账金额</strong>，不是只看宣传页面上的汇率。
+              到账时间、付款方式、收款账户所在地，都会影响实际体验。
+            </p>
+
+            <h3>Maya：地区性工具，不是全球账户</h3>
+            <p>
+              Maya 更贴近菲律宾本地场景，主要围绕 PHP 使用。它可以有电子钱包、
+              转账和部分银行服务，但不应该被当成一个可以替代所有跨境账户的东西。
+              我关注它，是因为它让我看到“本地钱包”和“跨境账户”在 KYC、限额和场景上的差异。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="phone">
+          <div class="chapter-head">
+            <span class="chapter-no">04</span>
+            <h2>手机号也是账户基础设施</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我持有 giffgaff（英国）和 DITO（菲律宾）手机号。它们对我来说不是收藏，
+              而是接收验证码、维持账户、接收服务通知的工具。很多人研究跨境账户只看银行，
+              但号码、邮箱和验证器才是账户能不能找回来的底层。
+            </p>
+
+            <div class="code">
+              <div class="code-head"><span>account_recovery.txt</span><strong>Chain</strong></div>
+              <pre><code>账户
+  ├─ 登录密码 / Passkey
+  ├─ 邮箱（可恢复）
+  ├─ 手机号（OTP）
+  ├─ 验证器 App
+  └─ 备用恢复方式
+
+任何一环失效，都可能把“我的账户”变成“我进不去的账户”。</code></pre>
+            </div>
+
+            <h3>我看到的几个风险</h3>
+            <ul>
+              <li>号码长期不活跃，被运营商回收或停用。</li>
+              <li>漫游状态下短信可达性不稳定，关键 OTP 收不到。</li>
+              <li>所有账户都绑定同一个号码，一旦丢失就是连锁反应。</li>
+              <li>换号后忘记改绑，旧号码变成别人的入口。</li>
+              <li>把短信验证当成唯一的第二因素。</li>
+            </ul>
+
+            <h3>我现在的做法</h3>
+            <ul>
+              <li>重要账户用长期可控的号码，配合邮箱和验证器，不把短信当唯一保障。</li>
+              <li>记录“号码 → 绑定账户”的清单，换号时逐项迁移。</li>
+              <li>保留充值、保号和服务通知记录。</li>
+              <li>遵守当地实名、漫游和运营商条款，不用号码规避实名或风控。</li>
+            </ul>
+            <div class="note">
+              <strong>Boundary</strong>
+              跨境号码和账户都受当地法律、运营商条款和平台规则约束。能注册不等于可以违规使用。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="hk">
+          <div class="chapter-head">
+            <span class="chapter-no">05</span>
+            <h2>港卡：我为什么先研究，不急着开</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我对港卡的兴趣来自它的系统位置：香港本地账户、港币与美元、FPS 转账、
+              Visa / Mastercard 或银联网络。它让我能观察在岸与离岸、不同清算路径之间的差别。
+            </p>
+            <p>但我目前把它放在“研究清单”，不急着开。原因很实际：</p>
+            <ol>
+              <li>我是否真的有香港本地支付或收款需求？</li>
+              <li>账户管理费、最低余额、转账费，能不能被使用场景覆盖？</li>
+              <li>地址证明、税务身份和申报义务，我是否清楚？</li>
+              <li>卡组织是 Visa / Mastercard 还是银联，哪些场景真的能用？</li>
+              <li>如果账户被审核或冻结，我的备用方案是什么？</li>
+            </ol>
+            <p>
+              港卡不是“更高级的卡”。它只是一个不同规则下的账户工具。
+              <strong>如果需求不清楚，开卡只会多一个需要维护的负担。</strong>
+            </p>
+            <p>
+              以后如果开，我会先读完整条款，记录真实成本，并把合规和申报放在第一位。
+              不用它做违规资金安排，也不把“能开户”当成“适合我”。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="risk">
+          <div class="chapter-head">
+            <span class="chapter-no">06</span>
+            <h2>我的风险清单</h2>
+          </div>
+          <div class="prose">
+            <p>
+              研究跨境账户越久，越觉得“方便”只是表面。真正决定体验的，是下面这些不起眼的东西：
+            </p>
+            <ul>
+              <li><strong>KYC / AML：</strong>身份审核、资金来源说明和交易监测，可能随时要求补充材料。</li>
+              <li><strong>汇率点差：</strong>牌价好看不代表换出来划算，要看到账金额。</li>
+              <li><strong>手续费：</strong>入金、出金、转账、换汇、账户管理，可能分开收。</li>
+              <li><strong>存款保障：</strong>不同机构、不同地区的保障范围不一样，不能默认“都保”。</li>
+              <li><strong>可用性：</strong>地区限制、服务变更、功能下架，都可能让计划失效。</li>
+              <li><strong>账户审核：</strong>合规审核期间资金可能被限制，必须留备用方案。</li>
+              <li><strong>失联风险：</strong>号码、邮箱、验证器任何一环丢失，都可能进不去账户。</li>
+              <li><strong>诈骗与钓鱼：</strong>假客服、假链接、假投资群，比技术故障更常见。</li>
+              <li><strong>税务申报：</strong>账户信息可能被交换，申报义务是自己的责任。</li>
+            </ul>
+            <p>
+              所以我不把生活费全放一个账户，也不因为某个平台“能开”就立刻使用。
+              <strong>任何跨境账户都可能因为合规审核被限制，备用方案不是多疑，是基本设计。</strong>
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="next">
+          <div class="chapter-head">
+            <span class="chapter-no">07</span>
+            <h2>下一阶段</h2>
+          </div>
+          <div class="prose">
+            <p>接下来想把研究做得更工程化一点：</p>
+            <ul>
+              <li>做一张跨境账户真实成本表，记录汇率、手续费、到账时间和维护条件。</li>
+              <li>完整读一遍 iFast、Wise、Maya 的条款，重点看限制和关闭账户的流程。</li>
+              <li>整理手机号、邮箱、验证器与账户的映射关系。</li>
+              <li>补一点 CRS、税务居民和反洗钱的基础知识。</li>
+              <li>港卡继续研究，等需求明确再行动。</li>
+            </ul>
+            <p>
+              支付体系教我的不是怎么多开账户，而是每一笔钱流动都有代价和边界。
+              先把边界看清楚，再谈方便。
+            </p>
+            <div class="note">
+              <strong>Disclaimer</strong>
+              本文只记录个人理解，不构成金融、投资、税务或法律建议。账户规则、费用与可用性会变化，请以官方条款和当地法律为准。
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar" aria-label="本页辅助信息">
+        <div class="side-box">
+          <span class="side-title">On this page</span>
+          <nav class="toc" aria-label="本页目录">
+            <a href="#why"><span>01</span> 为什么研究支付</a>
+            <a href="#domestic"><span>02</span> 国内银行卡体系</a>
+            <a href="#cross-border"><span>03</span> 跨境账户</a>
+            <a href="#phone"><span>04</span> 手机号基础设施</a>
+            <a href="#hk"><span>05</span> 港卡思考</a>
+            <a href="#risk"><span>06</span> 风险清单</a>
+            <a href="#next"><span>07</span> 下一阶段</a>
+          </nav>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Field note</span>
+          <p class="side-text">
+            <strong>先看牌照和条款，再看汇率和手续费。</strong>顺序对了，很多坑可以提前避开。
+          </p>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Status</span>
+          <div class="side-status">
+            <span>正在整理</span>
+            跨境账户真实成本表
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <nav class="pager" aria-label="翻页">
+        <a href="fit.html">
+          <span>← Previous / 03</span>
+          <strong>健身板块</strong>
+        </a>
+        <a href="cs.html">
+          <span>Next / 01 →</span>
+          <strong>计算机技术</strong>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>成长方向 / 04 Payment</span>
+      <a href="index.html">← 返回主页</a>
+    </div>
+  </footer>
+</body>
+</html>

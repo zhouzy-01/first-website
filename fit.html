@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>健身板块 — 成长方向</title>
+  <meta name="description" content="从 200 斤到 170 斤，从减脂转向力量训练：一个物联网学生的健身记录、体态目标与薄肌训练心得。">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0c'/%3E%3Cpath d='M16 46V18h6v22h26v6H16z' fill='%23ffbf66'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0d0c;
+      --panel: #16130e;
+      --panel-2: #1d1912;
+      --ink: #f3efe7;
+      --muted: #a89f91;
+      --dim: #887d6e;
+      --line: #302a21;
+      --line-strong: #4a4032;
+      --accent: #ffbf66;
+      --accent-soft: rgba(255, 191, 102, 0.07);
+      --sans: "Helvetica Neue", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(255, 191, 102, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 191, 102, 0.014) 1px, transparent 1px);
+      background-size: 100% 36px, 36px 100%;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    [id] { scroll-margin-top: 84px; }
+
+    h1, h2, h3, p, dl, dd, figure { margin: 0; }
+
+    h1, h2, h3 { text-wrap: balance; }
+
+    p { text-wrap: pretty; }
+
+    .wrap {
+      width: min(1080px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- 顶栏 ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      min-height: 62px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .path {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.05em;
+    }
+
+    .topnav {
+      display: flex;
+      justify-self: end;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .topnav a { color: var(--dim); text-decoration: none; }
+
+    .topnav a:hover { color: var(--accent); }
+
+    /* ---------- 页头 ---------- */
+
+    .page-hero {
+      padding-top: 58px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .kicker span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 44px;
+      align-items: end;
+      padding: 28px 0 40px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .page-hero h1 em {
+      display: block;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-intro {
+      max-width: 46ch;
+      padding-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-intro strong { color: var(--ink); font-weight: 500; }
+
+    .hero-intro .mono {
+      display: block;
+      margin-top: 20px;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .meta > div {
+      padding: 16px 20px 18px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .meta > div + div { padding-left: 20px; }
+
+    .meta > div:last-child { border-right: 0; }
+
+    .meta dt {
+      margin-bottom: 5px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .meta dd {
+      color: var(--ink);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    /* ---------- 正文布局 ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 248px;
+      gap: 64px;
+      align-items: start;
+      padding: 56px 0 72px;
+    }
+
+    .chapter { margin-bottom: 60px; }
+
+    .chapter:last-child { margin-bottom: 0; }
+
+    .chapter-head {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter-no {
+      padding-top: 3px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+
+    .chapter h2 {
+      font-size: clamp(1.35rem, 2.8vw, 1.72rem);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    .prose {
+      color: #d0c8bb;
+      font-size: 0.91rem;
+    }
+
+    .prose p { margin-bottom: 17px; }
+
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    .prose h3 {
+      margin: 30px 0 12px;
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .prose h3::before {
+      content: "# ";
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 400;
+    }
+
+    .prose ul,
+    .prose ol {
+      margin: 0 0 18px;
+      padding-left: 1.2rem;
+    }
+
+    .prose li { margin-bottom: 6px; }
+
+    .prose li::marker { color: var(--dim); }
+
+    .prose a {
+      color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    .lead-line {
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ---------- 数据块 ---------- */
+
+    .code {
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: #0d0b08;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .code-head strong {
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #e0d8ca;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      line-height: 1.75;
+      tab-size: 2;
+    }
+
+    code { font-family: var(--mono); }
+
+    p code,
+    li code,
+    td code {
+      padding: 1px 5px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 0.82em;
+    }
+
+    /* ---------- 提示与表格 ---------- */
+
+    .note {
+      margin: 24px 0;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      color: #d4ccbf;
+      font-size: 0.84rem;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      margin: 24px 0;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    caption {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td { color: #cdc4b6; }
+
+    td:first-child {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    /* ---------- 侧栏 ---------- */
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+    }
+
+    .side-box {
+      padding: 14px 0 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-title {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(48, 42, 33, 0.75);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .toc a span {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+    }
+
+    .toc a:hover { color: var(--accent); }
+
+    .side-text {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.7;
+    }
+
+    .side-text strong { color: var(--ink); font-weight: 500; }
+
+    .side-status {
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .side-status span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- 翻页 ---------- */
+
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pager a {
+      padding: 24px 0;
+      text-decoration: none;
+    }
+
+    .pager a + a {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .pager span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pager strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .pager a:hover strong { color: var(--accent); }
+
+    /* ---------- 页脚 ---------- */
+
+    .footer { padding: 34px 0 44px; }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+
+    .footer a:hover { color: var(--accent); }
+
+    /* ---------- 响应式 ---------- */
+
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-intro { max-width: 58ch; }
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 44px; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .side-box { padding-bottom: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .topbar-inner { grid-template-columns: 1fr auto; min-height: 56px; gap: 12px; }
+      .path { display: none; }
+      .topnav { gap: 12px; }
+      .page-hero { padding-top: 42px; }
+      .page-hero h1 { font-size: clamp(3rem, 16vw, 4.8rem); }
+      .hero-grid { padding: 24px 0 32px; }
+      .meta { grid-template-columns: 1fr 1fr; }
+      .meta > div { padding: 13px 12px 14px 0; }
+      .meta > div + div { padding-left: 12px; }
+      .meta > div:nth-child(2) { border-right: 0; }
+      .meta > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chapter { margin-bottom: 48px; }
+      .chapter-head { grid-template-columns: 1fr; gap: 5px; }
+      .chapter-no { padding-top: 0; }
+      .prose { font-size: 0.88rem; }
+      pre { font-size: 0.7rem; padding: 14px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .pager { grid-template-columns: 1fr; }
+      .pager a + a { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="back" href="index.html">← 返回主页</a>
+      <span class="path">~/growth/fit</span>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="cs.html">计算机</a>
+        <a href="deepseek.html">大模型</a>
+        <a href="finance.html">支付</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker"><span>03</span> Body / 训练记录</div>
+
+        <div class="hero-grid">
+          <h1>把身体<em>练成结构。</em></h1>
+          <div class="hero-intro">
+            <p>
+              200 斤的时候，我没想到自己会开始研究肩宽和体态。现在 170 斤，静息心率五十多，
+              还在练。健身对我来说不是变瘦，<strong>是重新搭一副能用的骨架。</strong>
+            </p>
+            <span class="mono">200 → 170 斤 / Strength / Posture / Lean Muscle</span>
+          </div>
+        </div>
+
+        <dl class="meta">
+          <div>
+            <dt>起点</dt>
+            <dd>200 斤 / 100 kg</dd>
+          </div>
+          <div>
+            <dt>现在</dt>
+            <dd>170 斤 / 85 kg</dd>
+          </div>
+          <div>
+            <dt>静息心率</dt>
+            <dd>50 多次 / 分</dd>
+          </div>
+          <div>
+            <dt>目标</dt>
+            <dd>薄肌 / 倒三角</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="wrap layout">
+      <article>
+        <section class="chapter" id="start">
+          <div class="chapter-head">
+            <span class="chapter-no">01</span>
+            <h2>起点：200 斤，不是一天吃出来的</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我最重的时候 200 斤。不是某天突然决定改变，也不是被一张照片刺激到。
+              真正让我开始的是日常摩擦：爬楼会喘，买衣服只能挑最大码，拍照下意识躲镜头，
+              坐下时腹部挤着，整个人总觉得沉。
+            </p>
+            <p>
+              我没有请教练，也没有做很激进的计划。第一步只是把每天走路固定下来，
+              先把含糖饮料和夜宵的频率降下去，尽量规律吃饭。前期掉得比较快，
+              后来明显变慢，有一段时间每天称体重，数字不动就焦虑。
+            </p>
+            <p class="lead-line">
+              现在回看，减重最重要的不是狠，是可持续。能坚持六个月的计划，比两周的地狱训练有用得多。
+            </p>
+            <p>
+              那段时间我学会了一件事：<strong>不要和身体打一场短跑。</strong>
+              体重只是结果之一，睡眠、精神状态、走路轻不轻松，都是反馈。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="turn">
+          <div class="chapter-head">
+            <span class="chapter-no">02</span>
+            <h2>转向力量：从“变轻”到“变结实”</h2>
+          </div>
+          <div class="prose">
+            <p>
+              体重到 170 斤附近后，数字不再是唯一目标。我发现自己还是那种“瘦下来的胖”：
+              肩窄、背薄、腰腹松，站着的时候整个人往前塌。体重轻了，但身体并没有变得更有结构。
+            </p>
+            <p>
+              于是开始练力量。最初只做俯卧撑、深蹲、哑铃划船这些基础动作，
+              后来慢慢学分动作、加负重，也开始记录每组做了多少次、动作稳不稳。
+            </p>
+            <p>力量训练教我的第一件事：进步不是线性的。第二件：动作质量优先于重量。第三件：恢复也是训练的一部分。</p>
+            <p>
+              我不再追求每次都比上次重。状态差就减一点，动作变形就退回去。
+              <strong>训练不是证明我能扛多少，而是让身体长期愿意继续练。</strong>
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="data">
+          <div class="chapter-head">
+            <span class="chapter-no">03</span>
+            <h2>我的几个数字</h2>
+          </div>
+          <div class="prose">
+            <p>
+              这些是个人记录，不是医学结论。体重会波动，静息心率受睡眠、咖啡和测量方式影响，
+              我看的是长期趋势。
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>Current snapshot / 个人数据</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">指标</th>
+                    <th scope="col">起点</th>
+                    <th scope="col">现在</th>
+                    <th scope="col">说明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>体重</td>
+                    <td>200 斤 / 100 kg</td>
+                    <td>170 斤 / 85 kg</td>
+                    <td>早晨空腹，长期趋势</td>
+                  </tr>
+                  <tr>
+                    <td>静息心率</td>
+                    <td>没有认真记录</td>
+                    <td>50 多次 / 分</td>
+                    <td>手环或手动测量，单次不作准</td>
+                  </tr>
+                  <tr>
+                    <td>体型</td>
+                    <td>腰腹明显，肩背偏薄</td>
+                    <td>倒三角雏形</td>
+                    <td>肩背变宽，腰围下降</td>
+                  </tr>
+                  <tr>
+                    <td>训练</td>
+                    <td>几乎不练</td>
+                    <td>每周力量训练</td>
+                    <td>按学业和恢复调整</td>
+                  </tr>
+                  <tr>
+                    <td>目标</td>
+                    <td>把体重降下来</td>
+                    <td>薄肌 / 体态</td>
+                    <td>不追求极端低体脂</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              最让我确认方向的是衣服的变化：肩线能撑起来，背部不再一片平，
+              站着时人自然往上提。这些比体重秤上的数字更能说明训练有没有起作用。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="training">
+          <div class="chapter-head">
+            <span class="chapter-no">04</span>
+            <h2>训练：复合动作、余力和恢复</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我现在以复合动作为主，不把时间全花在孤立动作上。深蹲或腿举、卧推或俯卧撑、
+              划船、肩推、硬拉变式，构成大部分训练。不是每次全做，而是按恢复和弱项安排。
+            </p>
+            <p>一周通常三次力量，其余时间走路。忙的时候减量，但不彻底停。</p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>普通一周 / 不是模板，只是记录</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">安排</th>
+                    <th scope="col">主要内容</th>
+                    <th scope="col">重点</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Day A</td>
+                    <td>下肢 + 推</td>
+                    <td>深蹲 / 腿举、卧推 / 俯卧撑</td>
+                  </tr>
+                  <tr>
+                    <td>Day B</td>
+                    <td>上肢拉 + 肩</td>
+                    <td>划船、引体辅助、肩推</td>
+                  </tr>
+                  <tr>
+                    <td>Day C</td>
+                    <td>全身 / 弱项</td>
+                    <td>硬拉变式、核心、体态</td>
+                  </tr>
+                  <tr>
+                    <td>Other</td>
+                    <td>走路 / 拉伸</td>
+                    <td>恢复，不硬堆训练量</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>我目前守的几条原则</h3>
+            <ul>
+              <li><strong>先动作，后重量。</strong>动作变形时，重量没有意义。</li>
+              <li><strong>每次留一点余力。</strong>大多数组不做到彻底力竭，第二天还能正常生活。</li>
+              <li><strong>肩背优先。</strong>想要倒三角，不能只练胸和手臂。</li>
+              <li><strong>睡眠优先于加练。</strong>睡不够的时候，多练一组只会让恢复更差。</li>
+              <li><strong>不天天称体重。</strong>看周平均和围度，避免被单日波动牵着走。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="chapter" id="shape">
+          <div class="chapter-head">
+            <span class="chapter-no">05</span>
+            <h2>薄肌与倒三角：我到底在练什么</h2>
+          </div>
+          <div class="prose">
+            <p>
+              薄肌不是瘦，也不是把自己练成一块一块的健美体型。
+              我理解的薄肌是：<strong>体脂不高，肌肉线条清楚，但整体仍然轻、干净、有运动感。</strong>
+              它更接近“穿衣显瘦、脱衣有轮廓”，而不是围度越大越好。
+            </p>
+            <p>
+              倒三角也不是一个动作能练出来的。它是肩宽、背阔肌、腰围和体态的总和。
+              肩要有一点宽度，背要能展开，腰腹不能松，站姿不能含胸。
+            </p>
+
+            <h3>目前重点</h3>
+            <ul>
+              <li>三角肌中束：让肩线更立体，穿 T 恤不塌。</li>
+              <li>背阔肌与上背：把背展开，改善圆肩和头前伸。</li>
+              <li>后链：臀腿和竖脊肌，支撑站姿与下肢力量。</li>
+              <li>腰腹控制：不是每天卷腹，而是让核心在深蹲、硬拉和走路时稳定。</li>
+            </ul>
+
+            <h3>肌肉小成就</h3>
+            <p>
+              肩线开始把衣服撑起来，俯卧撑比刚开始稳，划船时能感觉到背部在发力而不是只用手臂拉，
+              静息心率也降到了五十多次。都不算惊人的成绩，但它们让我知道训练没有白做。
+            </p>
+            <div class="note">
+              <strong>Not a medical note</strong>
+              我不是教练，也不是医生。这里的数字和训练安排只是个人记录，不构成训练或医疗建议。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="mind">
+          <div class="chapter-head">
+            <span class="chapter-no">06</span>
+            <h2>心态：别把身体当项目加班</h2>
+          </div>
+          <div class="prose">
+            <p>
+              健身之后，我对“自律”的理解变了。不是每天逼自己，而是把训练安排成不需要靠意志力启动的固定事项。
+              到时间就去，状态不好就轻一点，但不要因为一次没练好就整周放弃。
+            </p>
+            <p>
+              也会有断档。考试周、课程设计、熬夜之后，训练会停几天。
+              以前我会想着“补回来”，现在不会报复性加练，而是从轻一点重新开始。
+              <strong>身体不是项目，不能无限加班。</strong>
+            </p>
+            <p>
+              我想要的是能穿衬衫、能爬楼、能老得慢一点的身体，
+              不是一张更轻的体重秤照片。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="advice">
+          <div class="chapter-head">
+            <span class="chapter-no">07</span>
+            <h2>给同样从大体重开始的人</h2>
+          </div>
+          <div class="prose">
+            <p>如果现在的你也在 200 斤附近，我会说几句自己走过之后才明白的话：</p>
+            <ul>
+              <li>先走路，别一上来就跑步跳操，膝盖和脚踝需要时间适应。</li>
+              <li>不要靠极端节食换快速下降，掉得快不代表保得住。</li>
+              <li>力量训练可以早一点开始，肌肉是代谢和体态的底盘。</li>
+              <li>记录趋势，不记录单日。睡眠、压力和水分都会影响体重。</li>
+              <li>有基础病、旧伤或持续疼痛，先问医生或专业教练，不要硬扛。</li>
+            </ul>
+            <p>
+              我还在路上。170 斤不是终点，倒三角也不是一张可以交卷的照片。
+              先把今天这一练做好，明天再说明天的。
+            </p>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar" aria-label="本页辅助信息">
+        <div class="side-box">
+          <span class="side-title">On this page</span>
+          <nav class="toc" aria-label="本页目录">
+            <a href="#start"><span>01</span> 起点：200 斤</a>
+            <a href="#turn"><span>02</span> 转向力量</a>
+            <a href="#data"><span>03</span> 我的数字</a>
+            <a href="#training"><span>04</span> 训练安排</a>
+            <a href="#shape"><span>05</span> 薄肌与倒三角</a>
+            <a href="#mind"><span>06</span> 心态</a>
+            <a href="#advice"><span>07</span> 给同路人</a>
+          </nav>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Field note</span>
+          <p class="side-text">
+            <strong>体重是结果，力量是能力，体态是习惯。</strong>三件事不能只盯一个。
+          </p>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Status</span>
+          <div class="side-status">
+            <span>本周</span>
+            3 次力量 / 走路 / 睡眠优先
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <nav class="pager" aria-label="翻页">
+        <a href="deepseek.html">
+          <span>← Previous / 02</span>
+          <strong>大模型板块</strong>
+        </a>
+        <a href="finance.html">
+          <span>Next / 04 →</span>
+          <strong>支付体系</strong>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>成长方向 / 03 Body</span>
+      <a href="index.html">← 返回主页</a>
+    </div>
+  </footer>
+</body>
+</html>

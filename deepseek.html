@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大模型板块 — 成长方向</title>
+  <meta name="description" content="一个物联网学生对 DeepSeek、开放权重、模型蒸馏与社区二创的观察笔记，包括对鲸鱼娘圈层的个人思考。">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0c'/%3E%3Cpath d='M16 46V18h6v22h26v6H16z' fill='%2371d7ff'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0d0c;
+      --panel: #101519;
+      --panel-2: #141b20;
+      --ink: #edf2f4;
+      --muted: #98a5ab;
+      --dim: #748289;
+      --line: #253038;
+      --line-strong: #3a4a54;
+      --accent: #71d7ff;
+      --accent-soft: rgba(113, 215, 255, 0.07);
+      --sans: "Helvetica Neue", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(113, 215, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(113, 215, 255, 0.016) 1px, transparent 1px);
+      background-size: 100% 36px, 36px 100%;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    [id] { scroll-margin-top: 84px; }
+
+    h1, h2, h3, p, dl, dd, figure { margin: 0; }
+
+    h1, h2, h3 { text-wrap: balance; }
+
+    p { text-wrap: pretty; }
+
+    .wrap {
+      width: min(1080px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- 顶栏 ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      min-height: 62px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .path {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.05em;
+    }
+
+    .topnav {
+      display: flex;
+      justify-self: end;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .topnav a { color: var(--dim); text-decoration: none; }
+
+    .topnav a:hover { color: var(--accent); }
+
+    /* ---------- 页头 ---------- */
+
+    .page-hero {
+      padding-top: 58px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .kicker span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 44px;
+      align-items: end;
+      padding: 28px 0 40px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .page-hero h1 em {
+      display: block;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-intro {
+      max-width: 46ch;
+      padding-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-intro strong { color: var(--ink); font-weight: 500; }
+
+    .hero-intro .mono {
+      display: block;
+      margin-top: 20px;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .meta > div {
+      padding: 16px 20px 18px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .meta > div + div { padding-left: 20px; }
+
+    .meta > div:last-child { border-right: 0; }
+
+    .meta dt {
+      margin-bottom: 5px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .meta dd {
+      color: var(--ink);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    /* ---------- 正文布局 ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 248px;
+      gap: 64px;
+      align-items: start;
+      padding: 56px 0 72px;
+    }
+
+    .chapter { margin-bottom: 60px; }
+
+    .chapter:last-child { margin-bottom: 0; }
+
+    .chapter-head {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter-no {
+      padding-top: 3px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+
+    .chapter h2 {
+      font-size: clamp(1.35rem, 2.8vw, 1.72rem);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    .prose {
+      color: #c4ced2;
+      font-size: 0.91rem;
+    }
+
+    .prose p { margin-bottom: 17px; }
+
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    .prose h3 {
+      margin: 30px 0 12px;
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .prose h3::before {
+      content: "# ";
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 400;
+    }
+
+    .prose ul,
+    .prose ol {
+      margin: 0 0 18px;
+      padding-left: 1.2rem;
+    }
+
+    .prose li { margin-bottom: 6px; }
+
+    .prose li::marker { color: var(--dim); }
+
+    .prose a {
+      color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    .lead-line {
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ---------- 代码 / 流程图 ---------- */
+
+    .code {
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: #080b0d;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .code-head strong {
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #d3dfe3;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      line-height: 1.75;
+      tab-size: 2;
+    }
+
+    code { font-family: var(--mono); }
+
+    p code,
+    li code,
+    td code {
+      padding: 1px 5px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 0.82em;
+    }
+
+    /* ---------- 提示与表格 ---------- */
+
+    .note {
+      margin: 24px 0;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      color: #c7d2d7;
+      font-size: 0.84rem;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      margin: 24px 0;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    caption {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td { color: #c1ccd0; }
+
+    td:first-child {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    /* ---------- 侧栏 ---------- */
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+    }
+
+    .side-box {
+      padding: 14px 0 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-title {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(37, 48, 56, 0.7);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .toc a span {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+    }
+
+    .toc a:hover { color: var(--accent); }
+
+    .side-text {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.7;
+    }
+
+    .side-text strong { color: var(--ink); font-weight: 500; }
+
+    .side-status {
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .side-status span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- 翻页 ---------- */
+
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pager a {
+      padding: 24px 0;
+      text-decoration: none;
+    }
+
+    .pager a + a {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .pager span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pager strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .pager a:hover strong { color: var(--accent); }
+
+    /* ---------- 页脚 ---------- */
+
+    .footer { padding: 34px 0 44px; }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+
+    .footer a:hover { color: var(--accent); }
+
+    /* ---------- 响应式 ---------- */
+
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-intro { max-width: 58ch; }
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 44px; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .side-box { padding-bottom: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .topbar-inner { grid-template-columns: 1fr auto; min-height: 56px; gap: 12px; }
+      .path { display: none; }
+      .topnav { gap: 12px; }
+      .page-hero { padding-top: 42px; }
+      .page-hero h1 { font-size: clamp(3rem, 16vw, 4.8rem); }
+      .hero-grid { padding: 24px 0 32px; }
+      .meta { grid-template-columns: 1fr 1fr; }
+      .meta > div { padding: 13px 12px 14px 0; }
+      .meta > div + div { padding-left: 12px; }
+      .meta > div:nth-child(2) { border-right: 0; }
+      .meta > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chapter { margin-bottom: 48px; }
+      .chapter-head { grid-template-columns: 1fr; gap: 5px; }
+      .chapter-no { padding-top: 0; }
+      .prose { font-size: 0.88rem; }
+      pre { font-size: 0.7rem; padding: 14px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .pager { grid-template-columns: 1fr; }
+      .pager a + a { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="back" href="index.html">← 返回主页</a>
+      <span class="path">~/growth/deepseek</span>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="cs.html">计算机</a>
+        <a href="fit.html">健身</a>
+        <a href="finance.html">支付</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker"><span>02</span> Large Model / 观察与思考</div>
+
+        <div class="hero-grid">
+          <h1>模型不是<em>神像。</em></h1>
+          <div class="hero-intro">
+            <p>
+              我关注 DeepSeek，不只因为它能答题。更重要的是它把权重、技术报告和蒸馏模型放到台面上，
+              让一个普通学生也能在自己的机器上验证、拆解、再创作。对我来说，<strong>模型是工具，不是信仰。</strong>
+            </p>
+            <span class="mono">DeepSeek / Open Weights / Distillation / Community</span>
+          </div>
+        </div>
+
+        <dl class="meta">
+          <div>
+            <dt>关注对象</dt>
+            <dd>DeepSeek 系列</dd>
+          </div>
+          <div>
+            <dt>关注重点</dt>
+            <dd>开放权重与蒸馏</dd>
+          </div>
+          <div>
+            <dt>观察范围</dt>
+            <dd>社区二创 / 鲸鱼娘</dd>
+          </div>
+          <div>
+            <dt>当前在读</dt>
+            <dd>技术报告 / 模型卡</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="wrap layout">
+      <article>
+        <section class="chapter" id="why">
+          <div class="chapter-head">
+            <span class="chapter-no">01</span>
+            <h2>我为什么盯住 DeepSeek</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我不是模型从业者，只是一个使用者，外加物联网专业的学生。关注 DeepSeek 有三个很实际的原因：
+              它开放权重，我能本地跑；它公开技术报告，我能看工程取舍；它的社区二创足够活跃，
+              我能观察一个模型怎样进入真实使用场景。
+            </p>
+            <p>
+              笔记里我偶尔把 DeepSeek 简写成 <strong>DSH</strong>，这是我自己的书写习惯，不是官方缩写，
+              写在这里免得以后回看时混淆。
+            </p>
+            <p>
+              第一次在本地跑模型时，我最直观的感受不是“智能”，而是“资源换能力”：
+              上下文长度、显存、量化方式、生成速度，全都在互相挤。榜单上的一个分数，
+              落到我的机器上要换算成三个问题：<strong>能不能跑、跑得多快、错的时候有多离谱。</strong>
+            </p>
+            <p class="lead-line">
+              所以我看模型，不先问“它是不是最强”，而先问“它在什么任务上稳定地省我的时间”。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="open">
+          <div class="chapter-head">
+            <span class="chapter-no">02</span>
+            <h2>开放权重，不等于“什么都开源”</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我读公开材料时，会把“开放”拆成几层，不混着说。一个模型可以公开权重，
+              但不公开训练数据；可以公开技术报告，但不公开完整工程细节；可以允许商用，
+              但仍然有再分发和使用条款。
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>把“开放”拆开看</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">层级</th>
+                    <th scope="col">通常能看到什么</th>
+                    <th scope="col">我能做什么</th>
+                    <th scope="col">仍然缺什么</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>技术报告</td>
+                    <td>方法、训练流程、评测结果</td>
+                    <td>理解思路，复现部分实验</td>
+                    <td>完整数据与全部工程细节</td>
+                  </tr>
+                  <tr>
+                    <td>模型权重</td>
+                    <td>可下载的参数文件</td>
+                    <td>本地推理、量化、微调</td>
+                    <td>原始训练数据与完整训练代码</td>
+                  </tr>
+                  <tr>
+                    <td>蒸馏模型</td>
+                    <td>更小参数的学生模型</td>
+                    <td>低资源部署、横向对比</td>
+                    <td>教师模型的全部能力</td>
+                  </tr>
+                  <tr>
+                    <td>许可证</td>
+                    <td>使用、修改、分发条款</td>
+                    <td>判断商用与再分发边界</td>
+                    <td>不等于无条件开放</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              以我读到的公开信息，DeepSeek-R1 的权重采用 MIT 许可发布，同时公开了 R1-Zero
+              这类训练思路，也有基于 Qwen、Llama 等底座蒸馏出的小模型。这个组合的意义不只是“免费”，
+              而是让更多人能验证：<strong>强能力不一定只能靠无限堆参数，也可以从强模型的行为里教给更小的模型。</strong>
+            </p>
+            <p>
+              当然，具体许可和可用范围要以官方模型卡、许可证原文为准，信息会更新，我不能拿旧笔记当永久结论。
+              这也是我后来养成的一个习惯：<strong>先看许可证，再谈“开源”。</strong>
+            </p>
+
+            <h3>开放带来的两面</h3>
+            <p>
+              好处是明显的：可验证、可迁移、可二次开发。坏处也存在：版本碎片化、
+              部署质量参差、许可证理解成本高，还有人把“权重可下载”直接说成“完全开源”。
+              我倾向于把话说准确：<strong>开放权重是一种很强的开放，但它仍然有边界。</strong>
+            </p>
+            <div class="note">
+              <strong>Working definition</strong>
+              开放权重：我能拿到参数并在自己的环境里运行。完全开源：从数据、代码到训练流程都能被检查和重建。两者不是同义词。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="distill">
+          <div class="chapter-head">
+            <span class="chapter-no">03</span>
+            <h2>蒸馏：把“过程”教给学生模型</h2>
+          </div>
+          <div class="prose">
+            <p>
+              蒸馏不是把大模型压缩一下那么简单。我目前的理解是：教师模型产生输出，
+              学生模型在自己的容量和训练目标下学习这些信号。信号可以是答案，也可以是推理过程，
+              甚至是词表上的概率分布。
+            </p>
+
+            <div class="code">
+              <div class="code-head"><span>distillation_pipeline.txt</span><strong>Flow</strong></div>
+              <pre><code>强模型 / 教师
+  │  生成候选：答案、过程、评分
+  ▼
+筛选：正确性 / 格式 / 难度 / 多样性
+  │
+  ▼
+学生模型：监督微调 / 偏好优化
+  │
+  ▼
+分任务评测：推理 / 代码 / 中文 / 长文本
+  │
+  ▼
+失败样本回流，重新配数据</code></pre>
+            </div>
+
+            <p>
+              真正难的不是跑通脚本，而是数据筛选和评测。把完整的思维链直接喂给学生，
+              它可能学到格式，不一定学到策略；只给最终答案，又缺少过程监督。
+              教师也会犯错，错误的过程如果被当成标准答案，学生只会学得更像。
+            </p>
+            <p>
+              所以我现在的判断是：<strong>蒸馏的收益来自“数据分布 + 教师信号 + 学生容量”的匹配，
+              不是一句“用 R1 蒸馏”就能解释。</strong>同一个教师模型，换一批数据、换一个学生规模，
+              结果可能完全不同。
+            </p>
+
+            <h3>这件事也反过来影响我学习</h3>
+            <p>
+              把别人的笔记抄一遍，不等于掌握。把别人的推理过程拆开，用自己的题重做，
+              再对照错误，才更接近蒸馏里“有效信号”的部分。
+              区别在于：模型是被训练，我是主动选择拿什么训练自己。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="community">
+          <div class="chapter-head">
+            <span class="chapter-no">04</span>
+            <h2>社区是模型的“翻译层”</h2>
+          </div>
+          <div class="prose">
+            <p>
+              模型发布后，社区会很快做出量化版、LoRA、提示词模板、Agent 工具链、UI 封装、
+              角色卡和各种评测。它们不一定发论文，但决定了模型怎么被真正用起来。
+            </p>
+            <p>我观察二创时，会先看三个东西：</p>
+            <ol>
+              <li>它是否解决了具体问题，还是只换了一层皮。</li>
+              <li>它是否标注来源、模型版本和许可证边界。</li>
+              <li>它是否形成可复用的工作流，而不是一次性演示。</li>
+            </ol>
+
+            <h3>鲸鱼娘圈层：把模型人格化之后</h3>
+            <p>
+              DeepSeek 的鲸鱼标识在社区里被二创成拟人角色，也就是大家说的“鲸鱼娘”。
+              我看到的不是官方设定，而是一种用户自发的翻译：把冷冰冰的模型变成一个可以对话、
+              可以玩梗、可以共享设定的对象。有人写性格说明，有人做图，有人做对话模板。
+            </p>
+            <p>
+              它的价值在于降低理解门槛，让技术讨论有一个共同语言。风险也很清楚：
+              把二创当官方、把角色设定当模型事实，或者用“可爱”替代对能力和边界的判断。
+              我的态度是：<strong>可以玩，但别混淆边界；可以喜欢，但别用二创替代真实评测。</strong>
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>我看到的社区现象</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">现象</th>
+                    <th scope="col">我的观察</th>
+                    <th scope="col">我的判断</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>角色卡</td>
+                    <td>把模型能力包装成固定人格</td>
+                    <td>降低使用门槛，但容易掩盖幻觉</td>
+                  </tr>
+                  <tr>
+                    <td>量化版</td>
+                    <td>让低配机器也能跑起来</td>
+                    <td>速度与质量的交换要自己测</td>
+                  </tr>
+                  <tr>
+                    <td>提示词模板</td>
+                    <td>社区快速复用同一套输入</td>
+                    <td>好模板是接口，不是魔法</td>
+                  </tr>
+                  <tr>
+                    <td>鲸鱼娘二创</td>
+                    <td>模型被赋予人格与圈层文化</td>
+                    <td>可以当文化现象，不当官方事实</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="eval">
+          <div class="chapter-head">
+            <span class="chapter-no">05</span>
+            <h2>我怎么判断一个模型好不好用</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我不信单一榜单，也不凭一次对话下结论。现在的做法很土，但对我有效：
+              固定一组自己的题，重复跑，记录失败方式。
+            </p>
+            <ul>
+              <li>准备 10 个真实问题，覆盖代码、中文写作、事实核查和长文本。</li>
+              <li>同一提示词跑三次，看结果稳不稳定，而不是只看最好的一次。</li>
+              <li>记录延迟、内存占用和可接受的成本。</li>
+              <li>专门看失败：编造、格式崩、拒答、越权、听不懂否定。</li>
+              <li>读模型卡和许可证，不只看演示视频。</li>
+            </ul>
+            <p>
+              对我这种普通用户，最有价值的指标其实很朴素：
+              <strong>在我真正要做的事情上，它是否稳定地省时间。</strong>
+              如果每次都要我重新检查、重新纠正，那它再强也只是一个昂贵的玩具。
+            </p>
+            <div class="note">
+              <strong>Personal rule</strong>
+              把模型当工具，不当神像。工具要称手，也要知道什么时候不该用。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="next">
+          <div class="chapter-head">
+            <span class="chapter-no">06</span>
+            <h2>下一阶段</h2>
+          </div>
+          <div class="prose">
+            <p>接下来想做的几件事：</p>
+            <ul>
+              <li>在本地跑一个 7B 级蒸馏模型，记录量化前后的质量和速度差异。</li>
+              <li>完整读一遍 R1 技术报告和模型卡，把不懂的术语单独列出来。</li>
+              <li>搭一个自己的小型评测集，不追求全面，只覆盖我常做的事。</li>
+              <li>继续观察社区二创的许可证边界，尤其是二次分发和商用。</li>
+            </ul>
+            <p>
+              我不需要证明哪个模型最强。我需要知道，在什么任务上，它为什么强、什么时候会坏。
+            </p>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar" aria-label="本页辅助信息">
+        <div class="side-box">
+          <span class="side-title">On this page</span>
+          <nav class="toc" aria-label="本页目录">
+            <a href="#why"><span>01</span> 为什么关注 DeepSeek</a>
+            <a href="#open"><span>02</span> 开放权重的边界</a>
+            <a href="#distill"><span>03</span> 模型蒸馏</a>
+            <a href="#community"><span>04</span> 社区与鲸鱼娘</a>
+            <a href="#eval"><span>05</span> 我的评测方式</a>
+            <a href="#next"><span>06</span> 下一阶段</a>
+          </nav>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Field note</span>
+          <p class="side-text">
+            <strong>开放权重 ≠ 完全开源。</strong>先看许可证，再谈“自由使用”。
+          </p>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Status</span>
+          <div class="side-status">
+            <span>正在读</span>
+            DeepSeek-R1 技术报告 / 模型卡
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <nav class="pager" aria-label="翻页">
+        <a href="cs.html">
+          <span>← Previous / 01</span>
+          <strong>计算机技术</strong>
+        </a>
+        <a href="fit.html">
+          <span>Next / 03 →</span>
+          <strong>健身板块</strong>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>成长方向 / 02 Large Model</span>
+      <a href="index.html">← 返回主页</a>
+    </div>
+  </footer>
+</body>
+</html>

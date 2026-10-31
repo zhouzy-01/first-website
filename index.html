@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成长方向 — 个人学习与兴趣记录</title>
+  <meta name="description" content="成长方向：一个物联网专业大二学生的个人记录，关于计算机技术、大模型、健身与支付体系。">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0c'/%3E%3Cpath d='M16 46V18h6v22h26v6H16z' fill='%23a8ff60'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0d0c;
+      --panel: #111512;
+      --panel-2: #151a16;
+      --ink: #edf2ea;
+      --muted: #9aa69b;
+      --dim: #7c887e;
+      --line: #273029;
+      --line-strong: #3c4a3f;
+      --acid: #a8ff60;
+      --acid-soft: #1c2a17;
+      --cs: #a8ff60;
+      --ds: #71d7ff;
+      --fit: #ffbf66;
+      --fin: #c5a3ff;
+      --sans: "Helvetica Neue", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(168, 255, 96, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 255, 96, 0.018) 1px, transparent 1px);
+      background-size: 100% 36px, 36px 100%;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: var(--acid); color: var(--bg); }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--acid);
+      outline-offset: 3px;
+    }
+
+    [id] { scroll-margin-top: 84px; }
+
+    h1, h2, h3, p, dl, dd, figure { margin: 0; }
+
+    h1, h2, h3 { text-wrap: balance; }
+
+    p { text-wrap: pretty; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--acid);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- 顶栏 ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-top: 2px solid var(--acid);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      min-height: 64px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      background: var(--acid);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .brand-en {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .topnav a:hover { color: var(--acid); }
+
+    /* ---------- 首屏 ---------- */
+
+    .hero {
+      padding: 72px 0 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--acid);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(290px, 0.88fr);
+      gap: 48px;
+      align-items: end;
+      padding: 32px 0 56px;
+    }
+
+    .hero h1 {
+      font-size: clamp(4.8rem, 13vw, 10.5rem);
+      font-weight: 800;
+      line-height: 0.84;
+      letter-spacing: -0.075em;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--line-strong);
+    }
+
+    .hero-copy {
+      padding-bottom: 8px;
+    }
+
+    .hero-lead {
+      max-width: 28ch;
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 600;
+      line-height: 1.42;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-body {
+      max-width: 44ch;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .hero-body strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      background: var(--acid);
+      border: 1px solid var(--acid);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .btn:hover { background: var(--ink); border-color: var(--ink); }
+
+    .textlink {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-decoration: underline;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: 4px;
+    }
+
+    .textlink:hover { color: var(--acid); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat {
+      padding: 22px 24px 24px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .stat + .stat { padding-left: 24px; }
+
+    .stat:last-child { border-right: 0; }
+
+    .stat-k {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+    }
+
+    .stat small {
+      display: block;
+      margin-top: 6px;
+      color: var(--dim);
+      font-size: 0.76rem;
+    }
+
+    /* ---------- 通用区块 ---------- */
+
+    .section {
+      padding: 88px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 42px;
+    }
+
+    .section-no {
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+    }
+
+    .section-head p {
+      max-width: 48ch;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- 四个方向 ---------- */
+
+    .dir-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .dir {
+      position: relative;
+      display: flex;
+      min-height: 350px;
+      flex-direction: column;
+      padding: 28px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .dir:hover,
+    .dir:focus-visible {
+      background: var(--panel);
+      box-shadow: inset 0 2px 0 var(--c);
+    }
+
+    .dir-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 46px;
+    }
+
+    .dir-no {
+      color: var(--c);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+    }
+
+    .dir-icon {
+      font-size: 1.25rem;
+      filter: grayscale(0.25);
+    }
+
+    .dir h3 {
+      margin-bottom: 12px;
+      font-size: clamp(1.45rem, 2.8vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+    }
+
+    .dir:hover h3 { color: var(--c); }
+
+    .dir-desc {
+      max-width: 40ch;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .dir-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .dir-list li {
+      padding: 3px 7px;
+      border: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.02em;
+    }
+
+    .dir-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 28px;
+      color: var(--c);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .dir-arrow { font-size: 1rem; line-height: 1; }
+
+    /* ---------- 成长骨架 ---------- */
+
+    .spine {
+      border-top: 1px solid var(--line);
+    }
+
+    .spine-row {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr) 36px;
+      gap: 28px;
+      align-items: start;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a.spine-row:hover .spine-title { color: var(--acid); }
+
+    a.spine-row:hover .spine-arrow { color: var(--acid); }
+
+    .spine-key {
+      padding-top: 3px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .spine-main {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1.45fr);
+      gap: 24px;
+      align-items: baseline;
+    }
+
+    .spine-title {
+      font-size: 1.02rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .spine-main p {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .spine-arrow {
+      color: var(--line-strong);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      text-align: right;
+    }
+
+    .spine-note {
+      max-width: 58ch;
+      margin-top: 30px;
+      padding-left: 18px;
+      border-left: 2px solid var(--acid);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- 现在 ---------- */
+
+    .now {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.25fr);
+      gap: 54px;
+      padding: 34px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .now h2 {
+      margin: 14px 0 16px;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      letter-spacing: -0.035em;
+      line-height: 1.25;
+    }
+
+    .now-intro {
+      max-width: 32ch;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .now-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .now-list li {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .now-status {
+      color: var(--acid);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .now-list p {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .now-list strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    /* ---------- 页脚 ---------- */
+
+    .footer {
+      padding: 46px 0 54px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .footer strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .footer p {
+      max-width: 44ch;
+      color: var(--dim);
+      font-size: 0.76rem;
+    }
+
+    .footer-meta {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      line-height: 1.9;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    /* ---------- 响应式 ---------- */
+
+    @media (max-width: 860px) {
+      .hero { padding-top: 52px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 34px; padding-bottom: 44px; }
+      .hero-lead { max-width: 34ch; }
+      .section { padding: 66px 0; }
+      .section-head { grid-template-columns: 44px minmax(0, 1fr); }
+      .section-head p { grid-column: 2; }
+      .dir { min-height: 320px; }
+      .spine-row { grid-template-columns: 84px minmax(0, 1fr) 24px; gap: 18px; }
+      .spine-main { grid-template-columns: 1fr; gap: 8px; }
+      .now { grid-template-columns: 1fr; gap: 30px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .topbar-inner { min-height: 58px; gap: 12px; }
+      .brand-en { display: none; }
+      .topnav { gap: 14px; overflow-x: auto; white-space: nowrap; }
+      .topnav a { font-size: 0.64rem; }
+      .hero { padding-top: 40px; }
+      .hero h1 { font-size: clamp(4.2rem, 24vw, 6.8rem); }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat { padding: 18px 16px 18px 0; }
+      .stat + .stat { padding-left: 16px; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .stat strong { font-size: 1.35rem; }
+      .section-head { grid-template-columns: 1fr; gap: 10px; }
+      .section-head p { grid-column: auto; }
+      .dir-grid { grid-template-columns: 1fr; }
+      .dir { min-height: 0; padding: 24px; }
+      .dir-top { margin-bottom: 34px; }
+      .spine-row { grid-template-columns: 1fr 20px; gap: 8px 12px; }
+      .spine-key { grid-column: 1 / -1; }
+      .now { padding: 24px; }
+      .now-list li { grid-template-columns: 78px minmax(0, 1fr); }
+      .footer-inner { flex-direction: column; }
+      .footer-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">↑</span>
+        <span>成长方向</span>
+        <span class="brand-en">GROWTH VECTOR</span>
+      </a>
+      <nav class="topnav" aria-label="主页导航">
+        <a href="#directions">方向索引</a>
+        <a href="#spine">成长骨架</a>
+        <a href="#now">现在</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Personal Log / 2026 / IoT Sophomore</div>
+
+        <div class="hero-grid">
+          <h1>成长<span>方向</span></h1>
+          <div class="hero-copy">
+            <p class="hero-lead">记录我的学习历程、研究心得与各类兴趣探索。</p>
+            <p class="hero-body">
+              我是物联网专业的大二学生。这个站点不按作品集来写，而按我正在长出来的分支来记：
+              <strong>底层代码、模型前沿、身体状态，以及现实世界里的钱如何流动。</strong>
+              四条线互相不一定有直接关系，但它们共同决定我下一步往哪走。
+            </p>
+            <div class="hero-actions">
+              <a class="btn" href="#directions">查看四个方向 <span aria-hidden="true">↓</span></a>
+              <a class="textlink" href="#spine">先看成长骨架</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats" aria-label="个人数据概览">
+          <div class="stat">
+            <span class="stat-k">Tracks</span>
+            <strong>04</strong>
+            <small>条长期主线</small>
+          </div>
+          <div class="stat">
+            <span class="stat-k">Weight</span>
+            <strong>100→85</strong>
+            <small>kg，即 200→170 斤</small>
+          </div>
+          <div class="stat">
+            <span class="stat-k">Resting HR</span>
+            <strong>50+</strong>
+            <small>次 / 分，个人测量</small>
+          </div>
+          <div class="stat">
+            <span class="stat-k">Status</span>
+            <strong>BUILD</strong>
+            <small>持续记录中</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="directions">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-no">01 / MAP</span>
+          <h2>四个入口，四条正在生长的线</h2>
+          <p>
+            点进去是笔记，不是结论。这里保留我当下的理解、踩过的坑和还没想明白的问题，
+            以后回看时，能知道自己是从哪一步走过来的。
+          </p>
+        </div>
+
+        <div class="dir-grid">
+          <a class="dir" href="cs.html" style="--c: var(--cs)">
+            <div class="dir-top">
+              <span class="dir-no">01 / COMPUTER</span>
+              <span class="dir-icon" aria-hidden="true">📟</span>
+            </div>
+            <h3>计算机技术</h3>
+            <p class="dir-desc">
+              从 C 语言指针到链表、栈、队列，再到把页面真正部署到 Cloudflare Pages。
+              我更关心“为什么这样写能跑”，而不只是“这样写能交作业”。
+            </p>
+            <ul class="dir-list" aria-label="计算机技术关键词">
+              <li>数据结构</li>
+              <li>C 指针</li>
+              <li>链表 / 栈 / 队列</li>
+              <li>Cloudflare 踩坑</li>
+            </ul>
+            <div class="dir-foot">
+              <span>进入笔记</span>
+              <span class="dir-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a class="dir" href="deepseek.html" style="--c: var(--ds)">
+            <div class="dir-top">
+              <span class="dir-no">02 / MODEL</span>
+              <span class="dir-icon" aria-hidden="true">🤖</span>
+            </div>
+            <h3>大模型板块</h3>
+            <p class="dir-desc">
+              重点围绕 DeepSeek（我平时简写为 DSH）的公开研究、开源模型策略与社区二创。
+              也记录模型蒸馏带来的启发，以及鲸鱼娘圈层里那些有意思的观察。
+            </p>
+            <ul class="dir-list" aria-label="大模型关键词">
+              <li>DeepSeek</li>
+              <li>开放权重</li>
+              <li>模型蒸馏</li>
+              <li>社区二创</li>
+            </ul>
+            <div class="dir-foot">
+              <span>进入笔记</span>
+              <span class="dir-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a class="dir" href="fit.html" style="--c: var(--fit)">
+            <div class="dir-top">
+              <span class="dir-no">03 / BODY</span>
+              <span class="dir-icon" aria-hidden="true">💪</span>
+            </div>
+            <h3>健身板块</h3>
+            <p class="dir-desc">
+              从 200 斤减到 170 斤，再转向力量训练。现在更在意体态、肩背宽度和动作质量，
+              目标是薄肌、倒三角，而不是单纯把体重秤上的数字压下去。
+            </p>
+            <ul class="dir-list" aria-label="健身关键词">
+              <li>200→170 斤</li>
+              <li>力量训练</li>
+              <li>静息心率 50+</li>
+              <li>薄肌 / 倒三角</li>
+            </ul>
+            <div class="dir-foot">
+              <span>进入笔记</span>
+              <span class="dir-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a class="dir" href="finance.html" style="--c: var(--fin)">
+            <div class="dir-top">
+              <span class="dir-no">04 / MONEY</span>
+              <span class="dir-icon" aria-hidden="true">💳</span>
+            </div>
+            <h3>支付体系板块</h3>
+            <p class="dir-desc">
+              从国内银行卡与清算体系，到 iFast、Maya 等跨境账户，再到 giffgaff、DITO
+              手机号这些“基础设施”。我在补的是系统，不是薅羊毛攻略。
+            </p>
+            <ul class="dir-list" aria-label="支付体系关键词">
+              <li>国内卡体系</li>
+              <li>iFast / Maya</li>
+              <li>跨境账户</li>
+              <li>giffgaff / DITO</li>
+            </ul>
+            <div class="dir-foot">
+              <span>进入笔记</span>
+              <span class="dir-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="spine">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-no">02 / SPINE</span>
+          <h2>一条骨架，四个分支</h2>
+          <p>
+            四个方向不是四份互不相干的爱好清单。真正的主干只有一个：把一个东西从“见过”
+            推进到“能复现、能解释、能判断”。其余的都是这条主干长出来的枝叶。
+          </p>
+        </div>
+
+        <div class="spine">
+          <div class="spine-row">
+            <span class="spine-key">00 / BASE</span>
+            <div class="spine-main">
+              <span class="spine-title">先跑通，再讲清楚</span>
+              <p>能运行只是开始。还要知道边界在哪、失败时会发生什么，以及换一个环境是否仍然成立。</p>
+            </div>
+            <span class="spine-arrow" aria-hidden="true">·</span>
+          </div>
+
+          <a class="spine-row" href="cs.html">
+            <span class="spine-key">01 / 底层</span>
+            <div class="spine-main">
+              <span class="spine-title">计算机技术</span>
+              <p>用 C 语言理解内存与指针，用数据结构的视角拆解问题，再把页面部署到真实网络上。</p>
+            </div>
+            <span class="spine-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="spine-row" href="deepseek.html">
+            <span class="spine-key">02 / 前沿</span>
+            <div class="spine-main">
+              <span class="spine-title">大模型</span>
+              <p>不只看榜单和演示，也看开放权重、训练取舍、蒸馏路径，以及社区如何把模型变成自己的东西。</p>
+            </div>
+            <span class="spine-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="spine-row" href="fit.html">
+            <span class="spine-key">03 / 身体</span>
+            <div class="spine-main">
+              <span class="spine-title">健身</span>
+              <p>身体是所有计划的运行环境。减重、力量、睡眠和体态，都是长期工程，不靠一周的狠劲。</p>
+            </div>
+            <span class="spine-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="spine-row" href="finance.html">
+            <span class="spine-key">04 / 现实</span>
+            <div class="spine-main">
+              <span class="spine-title">支付体系</span>
+              <p>钱怎么从一张卡走到另一张卡，中间经过谁、受什么规则约束，是最贴近真实世界的系统课。</p>
+            </div>
+            <span class="spine-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <p class="spine-note">
+          我不急着给自己定型。先把每一条线都往前推一点，再看它们在哪里交叉。
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="now">
+      <div class="wrap">
+        <div class="now">
+          <div>
+            <span class="eyebrow">Now / 进行中</span>
+            <h2>最近在做什么</h2>
+            <p class="now-intro">
+              这里不是完成清单，是当前占用我注意力的几件事。会变，也会反复。
+            </p>
+          </div>
+
+          <ol class="now-list">
+            <li>
+              <span class="now-status">BUILD</span>
+              <p><strong>把数据结构写到手熟</strong>链表、栈、队列不只看图，自己从零实现，再补上边界测试和内存释放。</p>
+            </li>
+            <li>
+              <span class="now-status">READ</span>
+              <p><strong>读 DeepSeek 的公开资料</strong>技术报告、模型卡和许可证放在一起看，区分“开放权重”和“完全开源”。</p>
+            </li>
+            <li>
+              <span class="now-status">TRAIN</span>
+              <p><strong>维持力量训练频率</strong>优先复合动作和动作质量，继续把肩背与体态作为重点。</p>
+            </li>
+            <li>
+              <span class="now-status">TRACK</span>
+              <p><strong>整理跨境账户的真实成本</strong>把汇率、手续费、到账时间和维护条件记在同一张表里，而不是只看宣传页。</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>
+        <strong>成长方向 / Growth Vector</strong>
+        <p>一个物联网专业学生的个人记录。内容会持续修订，观点只代表当下。</p>
+      </div>
+      <div class="footer-meta">
+        HTML + CSS / No JavaScript<br>
+        Cloudflare Pages ready<br>
+        Last updated 2026.10
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

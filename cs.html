@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>计算机技术 — 成长方向</title>
+  <meta name="description" content="物联网专业学生的计算机学习笔记：C 语言指针、链表、栈与队列、调试习惯，以及 Cloudflare Pages 部署踩坑记录。">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0c'/%3E%3Cpath d='M16 46V18h6v22h26v6H16z' fill='%23a8ff60'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0d0c;
+      --panel: #111512;
+      --panel-2: #151a16;
+      --ink: #edf2ea;
+      --muted: #9aa69b;
+      --dim: #7c887e;
+      --line: #273029;
+      --line-strong: #3c4a3f;
+      --accent: #a8ff60;
+      --accent-soft: rgba(168, 255, 96, 0.07);
+      --sans: "Helvetica Neue", "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    html { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(168, 255, 96, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 255, 96, 0.016) 1px, transparent 1px);
+      background-size: 100% 36px, 36px 100%;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    [id] { scroll-margin-top: 84px; }
+
+    h1, h2, h3, p, dl, dd, figure { margin: 0; }
+
+    h1, h2, h3 { text-wrap: balance; }
+
+    p { text-wrap: pretty; }
+
+    .wrap {
+      width: min(1080px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- 顶栏 ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      min-height: 62px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .path {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.05em;
+    }
+
+    .topnav {
+      display: flex;
+      justify-self: end;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .topnav a { color: var(--dim); text-decoration: none; }
+
+    .topnav a:hover { color: var(--accent); }
+
+    /* ---------- 页头 ---------- */
+
+    .page-hero {
+      padding-top: 58px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .kicker span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 44px;
+      align-items: end;
+      padding: 28px 0 40px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .page-hero h1 em {
+      display: block;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-intro {
+      max-width: 46ch;
+      padding-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-intro strong { color: var(--ink); font-weight: 500; }
+
+    .hero-intro .mono {
+      display: block;
+      margin-top: 20px;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .meta > div {
+      padding: 16px 20px 18px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .meta > div + div { padding-left: 20px; }
+
+    .meta > div:last-child { border-right: 0; }
+
+    .meta dt {
+      margin-bottom: 5px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .meta dd {
+      color: var(--ink);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    /* ---------- 正文布局 ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 248px;
+      gap: 64px;
+      align-items: start;
+      padding: 56px 0 72px;
+    }
+
+    .chapter { margin-bottom: 60px; }
+
+    .chapter:last-child { margin-bottom: 0; }
+
+    .chapter-head {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter-no {
+      padding-top: 3px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+
+    .chapter h2 {
+      font-size: clamp(1.35rem, 2.8vw, 1.72rem);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    .prose {
+      color: #c7d0c8;
+      font-size: 0.91rem;
+    }
+
+    .prose p { margin-bottom: 17px; }
+
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    .prose h3 {
+      margin: 30px 0 12px;
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .prose h3::before {
+      content: "# ";
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 400;
+    }
+
+    .prose ul,
+    .prose ol {
+      margin: 0 0 18px;
+      padding-left: 1.2rem;
+    }
+
+    .prose li { margin-bottom: 6px; }
+
+    .prose li::marker { color: var(--dim); }
+
+    .prose a {
+      color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    .lead-line {
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ---------- 代码 ---------- */
+
+    .code {
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: #080b09;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .code-head strong {
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #d5e0d6;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      line-height: 1.75;
+      tab-size: 4;
+    }
+
+    code { font-family: var(--mono); }
+
+    p code,
+    li code,
+    td code {
+      padding: 1px 5px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 0.82em;
+    }
+
+    /* ---------- 提示与表格 ---------- */
+
+    .note {
+      margin: 24px 0;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      color: #cbd5cc;
+      font-size: 0.84rem;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      margin: 24px 0;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    caption {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td { color: #c3cdc5; }
+
+    td:first-child {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    /* ---------- 侧栏 ---------- */
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+    }
+
+    .side-box {
+      padding: 14px 0 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-title {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(39, 48, 41, 0.65);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .toc a span {
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+    }
+
+    .toc a:hover { color: var(--accent); }
+
+    .side-text {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.7;
+    }
+
+    .side-text strong { color: var(--ink); font-weight: 500; }
+
+    .side-status {
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .side-status span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- 翻页 ---------- */
+
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pager a {
+      padding: 24px 0;
+      text-decoration: none;
+    }
+
+    .pager a + a {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .pager span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pager strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .pager a:hover strong { color: var(--accent); }
+
+    /* ---------- 页脚 ---------- */
+
+    .footer { padding: 34px 0 44px; }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.61rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+
+    .footer a:hover { color: var(--accent); }
+
+    /* ---------- 响应式 ---------- */
+
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-intro { max-width: 58ch; }
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 44px; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .side-box { padding-bottom: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .topbar-inner { grid-template-columns: 1fr auto; min-height: 56px; gap: 12px; }
+      .path { display: none; }
+      .topnav { gap: 12px; }
+      .page-hero { padding-top: 42px; }
+      .page-hero h1 { font-size: clamp(3rem, 16vw, 4.8rem); }
+      .hero-grid { padding: 24px 0 32px; }
+      .meta { grid-template-columns: 1fr 1fr; }
+      .meta > div { padding: 13px 12px 14px 0; }
+      .meta > div + div { padding-left: 12px; }
+      .meta > div:nth-child(2) { border-right: 0; }
+      .meta > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chapter { margin-bottom: 48px; }
+      .chapter-head { grid-template-columns: 1fr; gap: 5px; }
+      .chapter-no { padding-top: 0; }
+      .prose { font-size: 0.88rem; }
+      pre { font-size: 0.7rem; padding: 14px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .pager { grid-template-columns: 1fr; }
+      .pager a + a { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="back" href="index.html">← 返回主页</a>
+      <span class="path">~/growth/cs</span>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="deepseek.html">大模型</a>
+        <a href="fit.html">健身</a>
+        <a href="finance.html">支付</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker"><span>01</span> Computer Technology / 学习笔记</div>
+
+        <div class="hero-grid">
+          <h1>把指针<em>拧明白。</em></h1>
+          <div class="hero-intro">
+            <p>
+              我学物联网，最初以为这个专业就是接传感器、烧录程序、连上云平台。
+              后来才明白，传感器只是入口；<strong>真正决定系统能不能稳住的，是下面的 C、内存、数据结构和网络。</strong>
+            </p>
+            <span class="mono">C / Data Structures / IoT / Static Web</span>
+          </div>
+        </div>
+
+        <dl class="meta">
+          <div>
+            <dt>专业</dt>
+            <dd>物联网工程</dd>
+          </div>
+          <div>
+            <dt>阶段</dt>
+            <dd>大二</dd>
+          </div>
+          <div>
+            <dt>主要语言</dt>
+            <dd>C，少量 C++</dd>
+          </div>
+          <div>
+            <dt>当前重点</dt>
+            <dd>数据结构 / 网页部署</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="wrap layout">
+      <article>
+        <section class="chapter" id="iot">
+          <div class="chapter-head">
+            <span class="chapter-no">01</span>
+            <h2>物联网不是“接个传感器”</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我的专业叫物联网工程。课上会碰传感器、单片机、通信协议和云平台，听起来什么都要会一点。
+              大一我也这么理解，忙着把模块接亮，觉得灯亮了就是成功。
+            </p>
+            <p>
+              后来做课程作业才发现：灯亮只说明这一段通了。数据从节点到网关、再到服务端，
+              任何一段的边界没处理，系统就会在半夜掉线。传感器读到的是电压，程序要把它变成有意义的数；
+              网络收到的是字节，服务端要判断它是否完整。中间没有哪一步是“自动”的。
+            </p>
+            <p class="lead-line">
+              这个认识改变了我学 C 的方式。以前我把 C 当成考试语言，背语法、抄代码；
+              现在把它当成描述硬件的工具：一个 <code>int</code> 多大、指针指向哪里、缓冲区有没有越界、内存由谁释放。
+            </p>
+            <p>
+              物联网的代码离硬件近，错误不会只给我一个红色报错。它可能直接是死机、乱码，
+              或者一块板子再也连不上。所以我给自己定了个顺序：<strong>先能稳定跑，再能解释为什么，最后才是优化。</strong>
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="pointer">
+          <div class="chapter-head">
+            <span class="chapter-no">02</span>
+            <h2>指针：地址、类型、边界</h2>
+          </div>
+          <div class="prose">
+            <p>
+              指针刚开始是我最没把握的部分。<code>*</code> 和 <code>&amp;</code> 认识，题也能做，
+              但一写链表就不知道自己在改谁。后来我不再背“指针就是地址”，改成画三样东西：
+              <strong>变量、地址、箭头。</strong>
+            </p>
+
+            <div class="code">
+              <div class="code-head"><span>pointer_basic.c</span><strong>C</strong></div>
+              <pre><code>int value = 42;
+int *p = &amp;value;      /* p 保存 value 的地址 */
+int **pp = &amp;p;        /* pp 保存 p 的地址 */
+
+printf("%d\n", *p);   /* 42：顺着 p 找到 value */
+printf("%p\n", (void *)p);</code></pre>
+            </div>
+
+            <p>
+              这段代码的价值不在输出，而在于我能手指着内存图说出每个 <code>*</code> 解了几层。
+              <code>int *p</code> 里的 <code>*</code> 是类型的一部分，<code>*p</code> 才是解引用。
+              它们长得一样，但不是同一件事。
+            </p>
+            <p>
+              另一个坎是空指针和野指针。指针没初始化、<code>free</code> 之后继续用、
+              函数返回局部数组的地址，这些错误可能当场崩，也可能安静地跑一会儿再崩。
+              我现在写链表会先问四个问题：
+            </p>
+            <ol>
+              <li>这个指针可能为空吗？为空时函数应该返回什么？</li>
+              <li>它指向的节点归谁释放？调用者还是被调用者？</li>
+              <li>改 <code>next</code> 之前，后面那段链会不会丢？</li>
+              <li>函数返回后，这个指针还指向有效内存吗？</li>
+            </ol>
+            <div class="note">
+              <strong>Debug note</strong>
+              指针题做对不等于会写指针。真正的检查标准是：把内存图画出来，能解释每一步之后谁指向谁。
+            </div>
+          </div>
+        </section>
+
+        <section class="chapter" id="structures">
+          <div class="chapter-head">
+            <span class="chapter-no">03</span>
+            <h2>链表、栈、队列：结构决定失败方式</h2>
+          </div>
+          <div class="prose">
+            <p>
+              链表是第一个让我觉得“数据结构不是图”的东西。图能看懂，代码却会在几个指针之间绕丢。
+              我后来固定用一个最小的单链表来练手：
+            </p>
+
+            <div class="code">
+              <div class="code-head"><span>linked_list.c</span><strong>C</strong></div>
+              <pre><code>typedef struct Node {
+    int value;
+    struct Node *next;
+} Node;
+
+Node *push_front(Node *head, int value)
+{
+    Node *node = malloc(sizeof *node);
+    if (node == NULL) {
+        return head;              /* 失败时不破坏原链表 */
+    }
+
+    node-&gt;value = value;
+    node-&gt;next = head;
+    return node;
+}
+
+void free_list(Node *head)
+{
+    while (head != NULL) {
+        Node *next = head-&gt;next;  /* 先保存，再释放 */
+        free(head);
+        head = next;
+    }
+}</code></pre>
+            </div>
+
+            <p>
+              <code>sizeof *node</code> 比 <code>sizeof(Node)</code> 更抗类型改动。
+              但真正容易错的是失败路径和所有权：申请失败时原链表不能被破坏；
+              插入成功时旧 <code>head</code> 要接到新节点后面；释放时如果先 <code>free</code> 再读 <code>next</code>，就是使用已释放内存。
+            </p>
+            <p>
+              栈和队列看起来只是“后进先出”和“先进先出”，但实现方式会改变复杂度和失败模式。
+              数组栈要考虑扩容；链栈要为每个节点 <code>malloc</code>；循环队列最容易错在
+              <code>head == tail</code> 到底表示空还是满。
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>我目前的理解进度</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">结构</th>
+                    <th scope="col">核心规则</th>
+                    <th scope="col">我的实现</th>
+                    <th scope="col">最容易踩的坑</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>单链表</td>
+                    <td>用 next 串联节点</td>
+                    <td>不带头结点</td>
+                    <td>丢链、重复释放、空表插入</td>
+                  </tr>
+                  <tr>
+                    <td>栈</td>
+                    <td>LIFO，后进先出</td>
+                    <td>动态数组 / 链栈</td>
+                    <td>空栈 pop、扩容后指针失效</td>
+                  </tr>
+                  <tr>
+                    <td>队列</td>
+                    <td>FIFO，先进先出</td>
+                    <td>循环数组 / 链队列</td>
+                    <td>判空判满、head 与 tail 更新</td>
+                  </tr>
+                  <tr>
+                    <td>哈希表</td>
+                    <td>平均 O(1) 查找</td>
+                    <td>链地址法，学习中</td>
+                    <td>扩容、哈希冲突、删除标记</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              复杂度表能背，但写的时候要能说出每一步为什么是 O(1) 或 O(n)。
+              比如循环队列，用额外一个 <code>size</code> 变量记录元素个数，判空判满就不再依赖“牺牲一个位置”的技巧，
+              代价只是多几个字节。工程里很多选择都是这种交换，不是标准答案。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="debug">
+          <div class="chapter-head">
+            <span class="chapter-no">04</span>
+            <h2>调试比写代码更久，这很正常</h2>
+          </div>
+          <div class="prose">
+            <p>
+              我花在调试上的时间比写代码多。一开始会烦躁，后来接受了：
+              程序的行为和我脑子里的模型不一致，调试就是找出差异。
+            </p>
+            <p>现在固定按这个顺序走：</p>
+            <ul>
+              <li>先用 <code>gcc -Wall -Wextra -Wpedantic</code> 编译，把警告当线索，不关掉。</li>
+              <li>加 <code>-g -fsanitize=address,undefined</code>，让越界和未定义行为尽早暴露。</li>
+              <li>把链表画在纸上，标出每一步的 head、tail 和 next。</li>
+              <li>写一个最小复现程序，把两百行缩成三十行，只留下出错的那条路径。</li>
+              <li>最后才开调试器，单步看变量的变化。</li>
+            </ul>
+            <p>
+              最有用的是画图。画完经常不用调试器就能发现问题：某个 <code>next</code> 被覆盖了，
+              或者 <code>head</code> 更新晚了一步。<strong>缩小问题范围的过程，本身就是在理解问题。</strong>
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="deploy">
+          <div class="chapter-head">
+            <span class="chapter-no">05</span>
+            <h2>把网页放到公网：Cloudflare Pages 踩坑</h2>
+          </div>
+          <div class="prose">
+            <p>
+              把页面放到公网，是另一门课。我现在这套站点就是纯 HTML + CSS，没有构建步骤，
+              直接传到 Cloudflare Pages。它适合我这种静态记录：快、便宜、坏了好查。
+            </p>
+            <p>目前踩过或差点踩到的坑：</p>
+            <ul>
+              <li><strong>入口文件必须是 <code>index.html</code>。</strong>文件名大小写在本地不敏感，线上可能敏感，部署后就会 404。</li>
+              <li><strong>路径尽量用相对链接。</strong><code>href="cs.html"</code> 比根路径更适合项目页，也方便以后换自定义域。</li>
+              <li><strong>别把源文件一起传上去。</strong>根目录混入不该公开的笔记、压缩包或环境配置，迟早会变成问题。</li>
+              <li><strong>自定义域一次只改一个变量。</strong>DNS 解析、代理状态、SSL 模式同时动，出问题就不知道是谁的锅。</li>
+              <li><strong>更新后先强刷。</strong>浏览器和边缘缓存都可能留着旧页面，不要第一时间怀疑部署失败。</li>
+              <li><strong>逐页点一遍。</strong>主页正常不代表子页正常，尤其检查导航、返回链接和图片路径。</li>
+            </ul>
+            <div class="note">
+              <strong>我的部署检查表</strong>
+              文件名全小写 → 所有链接相对路径 → 手机宽度看一遍 → 404 页面待补 → 再点“部署”。
+            </div>
+            <p>
+              域名是另一层。买域名、改 nameserver、等解析生效、确认 HTTPS，每一步都能卡住。
+              我的经验是：<strong>一次只改一个变量，改完用 <code>dig</code> 或在线 DNS 工具确认，再动下一步。</strong>
+              别在凌晨同时改 DNS、SSL 和缓存，否则出问题只能靠猜。
+            </p>
+          </div>
+        </section>
+
+        <section class="chapter" id="next">
+          <div class="chapter-head">
+            <span class="chapter-no">06</span>
+            <h2>下一阶段</h2>
+          </div>
+          <div class="prose">
+            <p>
+              接下来想把基础打得更实一点，不急着追新框架：
+            </p>
+            <ul>
+              <li>手写单链表、双向链表、循环队列，并补上边界测试。</li>
+              <li>用 C 做一个小型的传感器数据缓冲区，把“生产者 / 消费者”真正跑起来。</li>
+              <li>把课上的数据结构全部自己实现一遍，不只抄示例。</li>
+              <li>给站点补 404 页面和更清楚的部署记录。</li>
+            </ul>
+            <p>
+              我不想把“学过”写成“掌握”。<strong>能独立复现、能解释边界、能修好自己写崩的程序，才算往前一格。</strong>
+            </p>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar" aria-label="本页辅助信息">
+        <div class="side-box">
+          <span class="side-title">On this page</span>
+          <nav class="toc" aria-label="本页目录">
+            <a href="#iot"><span>01</span> 物联网不是接传感器</a>
+            <a href="#pointer"><span>02</span> 指针：地址与边界</a>
+            <a href="#structures"><span>03</span> 链表、栈、队列</a>
+            <a href="#debug"><span>04</span> 调试习惯</a>
+            <a href="#deploy"><span>05</span> Cloudflare 部署</a>
+            <a href="#next"><span>06</span> 下一阶段</a>
+          </nav>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Field note</span>
+          <p class="side-text">
+            <strong>我的调试顺序：</strong>先看警告，再缩小复现，然后画内存图，最后才开调试器。
+          </p>
+        </div>
+
+        <div class="side-box">
+          <span class="side-title">Status</span>
+          <div class="side-status">
+            <span>正在写</span>
+            循环队列 / 双向链表 / 404 页面
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <nav class="pager" aria-label="翻页">
+        <a href="finance.html">
+          <span>← Previous / 04</span>
+          <strong>支付体系</strong>
+        </a>
+        <a href="deepseek.html">
+          <span>Next / 02 →</span>
+          <strong>大模型板块</strong>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>成长方向 / 01 Computer</span>
+      <a href="index.html">← 返回主页</a>
+    </div>
+  </footer>
+</body>
+</html>
